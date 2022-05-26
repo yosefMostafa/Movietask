@@ -36,11 +36,32 @@ export class Movies extends React.Component {
 
         this.loadMovies(this.state.nextpage);
     }
+      check(allmovies){
+       
+        const uniqueIds = [];
+
+        const uniqueMovies = allmovies.filter(element => {
+          const isDuplicate = uniqueIds.includes(element.id);
+      
+          if (!isDuplicate) {
+            uniqueIds.push(element.id);
+      
+            return true;
+          }
+      
+          return false;
+        });
+      
+        return uniqueMovies
+    }
     loadMovies = async (page) => {
         try {
             let MoviesListRetrieved = await fetchMovies(page);
+            let allmovies=[...this.state.Movieslist, ...MoviesListRetrieved]
+          
+            let checked=this.check(allmovies)
             this.setState({
-                Movieslist: [...this.state.Movieslist, ...MoviesListRetrieved],
+                Movieslist:checked,
                 Loading: false,
                 nextpage: this.state.nextpage + 1,
                 sideloader: false,
